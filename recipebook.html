@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Book</title>
+     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+     
+      <style>
+        .div1{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(to left top, rgb(61, 61, 214),  rgb(110, 110, 176)) ;
+            height: 45vh;
+        }
+        .div2{
+            display: flex;
+            text-align: center;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            
+        }
+        .span1{
+            width: 15vw;
+            height: 5vh;
+            background-color: white;
+            color: rgb(61, 61, 214);
+            line-height: 5vh;
+            border-radius: 7px;
+            font-size: large;
+            font-weight: 600;
+            
+        }
+        .span1:hover{
+            background-color: rgb(239, 242, 244); 
+        }
+        #search{
+            width: 25vw;
+            height: 7vh;
+            border-radius: 10px;
+        }
+        #cards{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            
+            
+
+        }
+        .div3{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+           
+        }
+       
+      </style>
+</head>
+<body>
+    <div class="div1">
+        <div class="div2">
+            <h1 style="color: white; font-weight: 700;">🥘Recipe Book</h1>
+            <p style="color: white;">Discover delicious recipes with advanced search and filtering</p>
+            <span class="span1"><a href="addrecipe.html" style="text-decoration: none;  color: rgb(61, 61, 214);"> + Add new recipe </a></span>
+            <br>
+            <input type="text" id="search" placeholder="🔍 Search recipes, ingredients, or cuisine...">
+        </div>
+    </div>
+    <br>
+
+    <div class="div3">
+        
+        
+     <div id="cards" class="container">
+    <div class="card" style="width: 42rem;">
+  <img src="OIP.jpeg" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title" id="title">Classic Spaghetti Carbonara</h5>
+    <h6>Ingredients :</h6>
+    <p class="card-text" id="ingredients">
+        • 400g spaghetti
+        • 4 large eggs
+        • 200g pancetta or bacon
+        •100g Parmesan cheese
+        •Black pepper
+        •Salt
+  </p>
+   <h6>Instructions :</h6>
+   <p class="card-text" id="instructions">
+       Boil pasta according to package directions
+       Cook pancetta until crispy
+       Whisk eggs with cheese and pepper
+       Toss hot pasta with egg mixture
+       Add pancetta and serve immediately
+  </p>
+   
+  </div>
+</div>
+
+<div class="card" style="width: 42rem;">
+  <img src="Lime-Chicken-Tacos_EXPS_SSCRDS17_34347_B03_22_1b (1).jpg" class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title" id="name">Chicken Tacos</h5>
+    <h6>Ingredients :</h6>
+    <p class="card-text" id="ingredients">
+      •500g chicken breast
+      •8 corn tortilla
+      •1 lime
+      •Fresh cilantro
+      •1 onion
+      •Salt and pepper
+  </p>
+  <h6>Instructions :</h6>
+   <p class="card-text" id="instructions">
+      Season and cook chicken until done
+      Warm tortillas
+      Slice chicken and onion
+      Assemble tacos with chicken, onion, cilantro
+      Serve with lime wedges
+  </p>
+
+  </div>
+</div>
+
+</div>
+</div>
+  <div class="container procards shadow container">
+    <div class="d-flex justify-content-between align-items-center mb-2">
+      <h3>Your Recipes</h3>
+      
+    </div>
+
+    <div class="row" id="recp-list">
+      <!-- JS will render recipe cards here -->
+    </div>
+  </div>
+
+  <div id="res"></div>
+
+
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+
+
+    <script>
+         
+        let recplist = document.getElementById("recp-list");
+        let recp = JSON.parse(localStorage.getItem("recipes")) || [] ;
+
+       function saverecps(){
+        localStorage.setItem("recipes", JSON.stringify(recp));
+       }
+        function displayrecp(){
+           
+           recplist.innerHTML = "";
+           if(recp.length === 0){
+             recplist.innerHTML = '<br><h1 class="text-center text-danger">No recipe added by you..!</h1>';
+        return;
+           }
+           
+           
+             recp.forEach((r, i) => {
+               
+         recplist.innerHTML += `
+             <div class="col-md-4">
+        <div class="card" style="width : 30rem;">
+          <img src="${r.image}" class="card-img-top" alt="${r.title}">
+          <div class="card-body" >
+            <h5 class="card-title">${r.title}</h5>
+            <p><b>Ingredients:</b> ${r.ingredients}</p>
+            <p><b>Instructions:</b> ${r.instructions}</p>
+            <button class="btn btn-danger btn-sm" onclick="removeRecp(${i})">Remove</button>
+            <button class="btn btn-danger btn-sm" onclick="updateRecp(${i})">Update</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    
+        });
+    
+}
+
+   function updateRecp(index){
+    let recipe = recp[index];
+    let newtitle = prompt("Edit title :" ,recp.title);
+    let newingredients = prompt("Edit ingrdients :", recp.ingredients);
+    let newinstructions = prompt("Edit instructions :", recp.instructions);
+    
+    if(newingredients && newinstructions && newtitle){
+        recp[index] = {
+              ...recp[index],
+            title : newtitle,
+            ingredients : newingredients,
+            instructions : newinstructions,
+        };
+          saverecps();
+          displayrecp();
+    }
+  
+   }
+
+ 
+           
+           
+
+            
+     function removeRecp(index){
+          recp.splice(index, 1);
+          saverecps();
+          displayrecp();
+      }
+
+      let searchinput = document.getElementById("search");
+      searchinput.addEventListener("input", () => {
+        let q = searchinput.value.trim().toLowerCase();
+
+        document.querySelectorAll("#cards .cards").forEach(card => {
+            let text = card.innerText.toLowerCase();
+            card.style.display = text.includes(q)?"": "none";
+
+              document.querySelectorAll("#recp-list .card").forEach(card => {
+            let text = card.innerText.toLowerCase();
+            card.style.display = text.includes(q)?"": "none";
+        });
+      });});
+
+      displayrecp();
+       
+
+    </script>
+</body>
+</html>
